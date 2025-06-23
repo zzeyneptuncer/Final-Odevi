@@ -1,0 +1,84 @@
+useEffect(() => {
+    let result = allFilms.filter(film =>
+      film.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    if (genreFilter) {
+      result = result.filter(film =>
+        film.genre.toLowerCase() === genreFilter.toLowerCase()
+      );
+    }
+
+    if (yearFilter) {
+      result = result.filter(film => film.year.toString() === yearFilter);
+    }
+
+    if (ratingFilter) {
+      result = result.filter(film => film.rating >= parseFloat(ratingFilter));
+    }
+
+    setFilteredFilms(result);
+  }, [searchQuery, genreFilter, yearFilter, ratingFilter]);
+
+  return (
+    <div className="min-h-screen bg-black text-white px-6 py-12">
+      {/* Arama ve Filtreler */}
+      <div className="max-w-7xl mx-auto flex flex-wrap md:flex-nowrap justify-center items-center gap-4 md:gap-x-6 mb-10">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Film adıyla ara..."
+          className="w-full md:w-1/4 px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 placeholder-gray-400"
+        />
+
+        <select
+          value={genreFilter}
+          onChange={(e) => setGenreFilter(e.target.value)}
+          className="w-full md:w-1/5 px-4 py-2 rounded-lg bg-gray-900 border border-gray-700"
+        >
+          <option value="">Tür</option>
+          <option value="Dram">Dram</option>
+          <option value="Suç">Suç</option>
+          <option value="Bilim Kurgu">Bilim Kurgu</option>
+        </select>
+
+        <select
+          value={yearFilter}
+          onChange={(e) => setYearFilter(e.target.value)}
+          className="w-full md:w-1/5 px-4 py-2 rounded-lg bg-gray-900 border border-gray-700"
+        >
+          <option value="">Yıl</option>
+          <option value="1994">1994</option>
+          <option value="1972">1972</option>
+          <option value="2010">2010</option>
+        </select>
+
+        <select
+          value={ratingFilter}
+          onChange={(e) => setRatingFilter(e.target.value)}
+          className="w-full md:w-1/5 px-4 py-2 rounded-lg bg-gray-900 border border-gray-700"
+        >
+          <option value="">Puan</option>
+          <option value="9">9+</option>
+          <option value="8">8+</option>
+        </select>
+      </div>
+
+      {/* Film Kartları */}
+      <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center">
+        {filteredFilms.map((film) => (
+          <FilmCard
+            key={film.id}
+            film={film}
+            onClick={() => onFilmSelect(film)}
+          />
+        ))}
+      </div>
+
+      {filteredFilms.length === 0 && (
+        <p className="text-center text-gray-400 mt-20">Aradığın film bulunamadı.</p>
+      )}
+    </div>
+  );
+};
